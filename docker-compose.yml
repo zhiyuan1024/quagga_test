@@ -1,0 +1,59 @@
+version: '3'
+services:
+  route0:
+    image: 'cumulusnetworks/quagga'
+    container_name: 'route0'
+    privileged: true
+    networks:
+      net0:
+        ipv4_address: 192.168.11.10
+      net1:
+        ipv4_address: 192.168.12.3
+    tty: true
+  route1:
+    image: 'cumulusnetworks/quagga'
+    container_name: 'route1'
+    privileged: true
+    networks:
+      net1:
+        ipv4_address: 192.168.12.2
+      net2:
+        ipv4_address: 192.168.13.10
+    tty: true
+  client0:
+    image: 'busybox'
+    container_name: 'client0'
+    tty: true
+    privileged: true
+    stdin_open: true
+    networks:
+      net0:
+        ipv4_address: 192.168.11.11
+  client1:
+    image: 'busybox'
+    container_name: 'client1'
+    tty: true
+    privileged: true
+    stdin_open: true
+    networks:
+      net2:
+        ipv4_address: 192.168.13.11
+networks:
+  net0:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.11.0/24
+  net1:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.12.0/24
+  net2:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.13.0/24
